@@ -80,6 +80,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.bg-theme {
+  background: var(--color-background);
+}
+
 footer{
   grid-column-start: 1;
   grid-column-end: s2;
