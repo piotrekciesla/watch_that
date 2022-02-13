@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 :root {
-  --vt-c-white: #ffffff;
+  --vt-c-white: #e0e0e0;
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
 
@@ -66,9 +66,10 @@ body {
   min-height: 100vh;
   color: var(--color-text);
   background: var(--color-background);
-  background-image: url("/src/assets/layered-waves.svg");
-  background-repeat: no-repeat;
-  background-size: contain;
+  background-image: url("/src/assets/layered-waves-top.svg"), url("/src/assets/layered-waves-bottom.svg");
+  background-repeat: no-repeat, no-repeat;
+  background-size: contain, contain;
+  background-position: top, bottom;
   transition: color 0.5s, background-color 0.5s;
   line-height: 1.6;
   font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
@@ -79,6 +80,22 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.neumorph-shaddow{
-  box-shadow:  6px 6px 14px #0a0a0a, -6px -6px 14px #262626;
+footer{
+  grid-column-start: 1;
+  grid-column-end: s2;
+}
+@media (prefers-color-scheme: dark) {
+  .neumorph-shaddow {
+    box-shadow: 6px 6px 14px #0a0a0a, -6px -6px 14px #262626;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .neumorph-shaddow {
+    box-shadow: 6px 6px 14px #bebebe, -6px -6px 14px #ffffff;
+  }
+}
+
+.text-shadow {
+  text-shadow: rgba(0, 0, 0, 0.55) 2px 2px 2px;
 }

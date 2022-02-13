@@ -1,13 +1,12 @@
 <script setup>
-import MovieTile from './MovieTile.vue'
+import MovieTile from "./MovieTile.vue";
 
 defineProps({
-  movies:{
+  movies: {
     default: [],
-    required: true
-  }
-})
-
+    required: true,
+  },
+});
 </script>
 
 <template>

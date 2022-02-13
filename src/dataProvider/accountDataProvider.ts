@@ -22,7 +22,7 @@ export const toggleFavoriteMovie = async (
   favorite: boolean
 ): Promise<void> => {
   const session_id = sessionStorage.getItem("session_id");
-   (
+  (
     await axiosInstance.post(
       `/account/${account_id}/favorite`,
       {

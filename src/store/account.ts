@@ -1,9 +1,8 @@
 import type { Module } from "vuex";
 import type { RootState } from "./index";
 import {
-  createSession,
-  login,
-  type RequestToken,
+  createSessionWithLoginPassword,
+  logout,
 } from "./../dataProvider/authDataProvider";
 import {
   getAccountData,
@@ -27,7 +26,7 @@ export const account: Module<State, RootState> = {
     };
   },
   mutations: {
-    loadAccount(state: State, account) {
+    setUserData(state: State, account) {
       state.userData = account;
     },
     setUserFavoritesList(state: State, userFavoritesList) {
@@ -40,23 +39,30 @@ export const account: Module<State, RootState> = {
   },
   actions: {
     async fetchAccountData({ commit }) {
-      const requestToken = localStorage.getItem("request_token");
-      if (!requestToken) {
-        return;
-      }
-      const request_token: RequestToken = JSON.parse(requestToken);
-
-      const session_id = sessionStorage.getItem("session_id");
-
-      if (!session_id) {
-        await createSession(request_token);
-      }
-
       const accountData = await getAccountData();
-      commit("loadAccount", accountData);
+      commit("setUserData", accountData);
     },
-    async getRequestToken() {
-      await login();
+    async loginWithUserNamePassword({ dispatch }, payload) {
+      try {
+        await createSessionWithLoginPassword(
+          payload.username,
+          payload.password
+        );
+        await dispatch("fetchAccountData");
+        return { success: true };
+      } catch (e) {
+        return { success: false };
+      }
+    },
+    async logOut({ commit }) {
+      try {
+        await logout();
+        commit("setUserFavoritesList", null);
+        commit("setUserData", null);
+        return { success: true };
+      } catch (e) {
+        return { success: false };
+      }
     },
     async fetchFavorites({ commit, dispatch, state }) {
       if (null === state.userData) {
@@ -75,11 +81,7 @@ export const account: Module<State, RootState> = {
         return;
       }
 
-      const response = await toggleFavoriteMovie(
-        state.userData.id,
-        movie.id,
-        true
-      );
+      await toggleFavoriteMovie(state.userData.id, movie.id, true);
     },
     async removeMovieFromFavorites({ dispatch, state }, movie: Movie) {
       if (null === state.userData) {
@@ -88,13 +90,7 @@ export const account: Module<State, RootState> = {
         return;
       }
 
-      console.log(movie);
-
-      const response = await toggleFavoriteMovie(
-        state.userData.id,
-        movie.id,
-        false
-      );
+      await toggleFavoriteMovie(state.userData.id, movie.id, false);
     },
   },
 };

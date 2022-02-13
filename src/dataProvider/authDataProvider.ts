@@ -6,24 +6,28 @@ export interface RequestToken {
   request_token: string;
 }
 
-export const login = async () => {
-  const response = (await axiosInstance.get("/authentication/token/new")).data;
+export const createSessionWithLoginPassword = async (
+  username: string,
+  password: string
+) => {
+  const tokenResponse: RequestToken = (
+    await axiosInstance.get("/authentication/token/new")
+  ).data;
 
-  localStorage.setItem("request_token", JSON.stringify(response));
-
-  window.location.replace(
-    `https://www.themoviedb.org/authenticate/${response.request_token}?redirect_to=${document.URL}`
-  );
+  const sessionResponse = (
+    await axiosInstance.post("/authentication/token/validate_with_login", {
+      request_token: tokenResponse.request_token,
+      username,
+      password,
+    })
+  ).data;
+  await createSession(sessionResponse.request_token);
 };
 
-export const createSession = async (request_token: RequestToken) => {
-  if (new Date(request_token.expires_at) < new Date()) {
-    await login();
-    return;
-  }
+export const createSession = async (request_token: string) => {
   const { session_id } = (
     await axiosInstance.post("/authentication/session/new", {
-      request_token: request_token.request_token,
+      request_token: request_token,
     })
   ).data;
   sessionStorage.setItem("session_id", session_id);

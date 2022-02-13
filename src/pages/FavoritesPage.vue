@@ -1,27 +1,16 @@
 <script setup lang="ts">
-  import MovieList from "./../components/movies/MovieList.vue";
-  import {useStore} from "vuex";
-  import {computed} from "vue";
+import MovieList from "./../components/movies/MovieList.vue";
+import { useStore } from "vuex";
+import { computed } from "vue";
 
-  const store = useStore();
+const store = useStore();
 
-  store.dispatch('fetchFavorites');
-  const movies = computed( () => store.getters.userFavoritesList)
-
+store.dispatch("fetchFavorites");
+const movies = computed(() => store.getters.userFavoritesList);
 </script>
 <template>
   <div>
-    <h1 class="text-3xl text-center m-4">This are your favorite movies</h1>
+    <h1 class="m-4 text-center text-3xl">This are your favorite movies</h1>
     <MovieList :movies="movies"></MovieList>
   </div>
 </template>
-
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>

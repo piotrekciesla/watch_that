@@ -1,39 +1,45 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import LoginButton from './components/LoginButton.vue'
-import Logo from './components/Logo.vue'
-import {useStore} from "vuex";
-import {computed, inject} from "vue";
+import { RouterLink, RouterView } from "vue-router";
+import Hello from "./components/Hello.vue";
+import { useStore } from "vuex";
+import { computed } from "vue";
 
-const store = useStore()
+const store = useStore();
 
-store.dispatch('fetchAccountData');
+store.dispatch("fetchAccountData");
 
-const account = computed(()=>store.getters.account)
-
-const UserLoggedIn = sessionStorage.getItem('session_id');
+const account = computed(() => store.getters.account);
 </script>
 
 <template>
-  <header>
-<!--    <img alt="logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />-->
-    <logo class="logo"/>
-    <div class="wrapper">
-      <HelloWorld :msg="`HEY ${account?.name || account?.username || 'You'}!`" />
-      <nav>
+  <header class="top-0 lg:sticky xl:sticky">
+    <!--    <logo class="logo" />-->
+    <div class="wrapper justify-center">
+      <Hello :msg="`HEY ${account?.name || account?.username || 'You'}!`" />
+      <nav class="mb-4 text-center">
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink v-if="UserLoggedIn" to="/favorites">Favorites</RouterLink>
-        <login-button/>
+        <RouterLink v-if="account" to="/favorites">Favorites</RouterLink>
+        <RouterLink v-if="account" to="/account">Account</RouterLink>
+        <RouterLink v-if="!account" to="/login">Login</RouterLink>
       </nav>
     </div>
   </header>
 
   <RouterView />
+
+  <footer class="mt-20 rounded-xl p-3 text-center backdrop-blur-md">
+    <p class="mb-4 font-bold">Watch that is powered by</p>
+    <a class="hover:cursor-pointer" href="https://www.themoviedb.org"
+      ><img
+        class="hover:cursor-pointer"
+        src="/src/assets/tmdbLogo.svg"
+        alt="tmdbLogo"
+    /></a>
+  </footer>
 </template>
 
 <style>
-@import '@/assets/base.scss';
+@import "@/assets/base.scss";
 
 #app {
   max-width: 1280px;
